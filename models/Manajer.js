@@ -1,4 +1,5 @@
 const connection = require('../configs/database-akun')
+const bcrypt = require('bcryptjs')
 
 class Manajer {
     static async login(data) {
@@ -14,6 +15,24 @@ class Manajer {
         try {
             const [rows] = await connection.query(`SELECT nama from pegawai where id = ?`, [id])
             return rows[0]
+        } catch (err) {
+            throw err
+        }
+    }
+
+    static async getById(id) {
+        try {
+            const [rows] = await connection.query(`SELECT * from pegawai where id = ?`, [id])
+            return rows[0]
+        } catch (err) {
+            throw err
+        }
+    }
+
+    static async changePassword(id, data) {
+        try {
+            const hashedPassword = await bcrypt.hash(data.kata_sandi_baru, 10)
+            await connection.query(`update pegawai set kata_sandi = ? where id = ? `, [hashedPassword, id])
         } catch (err) {
             throw err
         }
