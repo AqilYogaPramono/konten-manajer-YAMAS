@@ -5,7 +5,7 @@ const Manajer = require('../models/Manajer')
 
 const router = express.Router()
 
-router.get('/masuk', async (req, res) => {
+router.get('/', async (req, res) => {
     try {
         res.render('auths/login', { data: req.flash('data')[0] })
     } catch (err) {
@@ -17,28 +17,51 @@ router.get('/masuk', async (req, res) => {
 
 router.post('/log', async (req, res) => {
     try {
-        const { email, password } = req.body
-        const data = { email, password }
+        const { nomor_pegawai, kata_sandi } = req.body
+        const data = { nomor_pegawai, kata_sandi }
 
-        if (!email) {
-            req.flash('error', 'Email is required')
+        if (!nomor_pegawai) {
+            req.flash('error', 'Nomor Pegawai diperlukan')
             req.flash('data', data)
-            return res.redirect('/masuk')
+            return res.redirect('/')
         }
 
-        if (!password) {
-            req.flash('error', 'Password is required')
+        if (!kata_sandi) {
+            req.flash('error', 'Kata Sandi diperlukan')
             req.flash('data', data)
-            return res.redirect('/masuk')
+            return res.redirect('/')
         }
 
-        if (!await bcrypt.compare(password, users.password)) {
-            req.flash('error', 'Password incorrect')
+        const manajer = await Manajer.login(data)
+
+        if (manajer.nama_jabatan != 'Manajer') {
+            req.flash('error', 'Akun Anda tidak memiliki akses untuk login')
             req.flash('data', data)
-            return res.redirect('/masuk')
+            return res.redirect('/')
         }
+
+        if (!manajer) {
+            req.flash('error', 'Nomor Pegawai yang anda masukkan salah')
+            req.flash('data', data)
+            return res.redirect('/')
+        }
+
+        if (manajer.status_akun != 'Aktif') {
+            req.flash('error', 'Akun anda belum aktif, silahkan hubungi Admin')
+            req.flash('data', data)
+            return res.redirect('/')
+        }
+
+        if (!await bcrypt.compare(kata_sandi, manajer.kata_sandi)) {
+            req.flash('error', 'Kata sandi yang anda masukkan salah')
+            req.flash('data', data)
+            return res.redirect('/')
+        }
+
+        req.session.manajerId = manajer.id
 
         req.flash('success', 'Login successful')
+        res.redirect('/manajer/dashbaord')
     } catch (err) {
         console.error(err)
         req.flash('error', 'Internal server error')
@@ -54,7 +77,7 @@ router.get('/logout', async(req, res) => {
     } catch (err) {
         console.error(err)
         req.flash('error', 'Internal server error')
-        if (req.session.adminId) return res.redirect('/admin/dashboard')
+        if (req.session.manajerId) return res.redirect('/admin/dashboard')
     }
 })
 
