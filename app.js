@@ -55,10 +55,10 @@ app.use('/API', APIRouter)
 app.use('/manajer/dashboard', manajerDashboard)
 app.use('/manajer/ubah-kata-sandi', manajer)
 
-app.use('/manajer', manajerPembina)
-app.use('/manajer', manajerPengawas)
-app.use('/manajer', manajerPengumuman)
-app.use('/manajer', manajerSahabatMedayu)
+app.use('/manajer/pembina', manajerPembina)
+app.use('/manajer/pengawas', manajerPengawas)
+app.use('/manajer/pengumuman', manajerPengumuman)
+app.use('/manajer/sahabat-medayu', manajerSahabatMedayu)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

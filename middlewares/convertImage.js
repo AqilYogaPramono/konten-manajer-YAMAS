@@ -1,8 +1,5 @@
-// import sharp
 const sharp = require('sharp')
-// import fs
 const fs = require('fs')
-// import path
 const path = require('path')
 
 async function convertImageFile(inputPath) {
