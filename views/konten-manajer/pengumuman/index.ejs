@@ -1,0 +1,100 @@
+<%- include('../../partials/headers/__header-dashboard.ejs', { title: 'Data Pengumuman' }) %>
+<%- include('../../partials/navs/__nav-manajer.ejs') %>
+<%- include('../../partials/messages/__messages-dashboard.ejs') %>
+
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="row">
+            <div class="col-lg-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-3">
+                            <h4 class="card-title mb-3 mb-md-0">Data Pengumuman</h4>
+                            <a href="/manajer/pengumuman/buat" class="btn btn-primary btn-sm" data-loading>Tambah Pengumuman</a>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-hover table-stacked">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Foto</th>
+                                        <th>Judul Pengumuman</th>
+                                        <th>Isi Pengumuman</th>
+                                        <th style="width: 200px;" class="text-right">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% if (Array.isArray(pengumuman) && pengumuman.length) { %>
+                                        <% for (let i = 0; i < pengumuman.length; i++) { const item = pengumuman[i]; %>
+                                            <tr>
+                                                <td data-label="No"><%= i + 1 %></td>
+                                                <td data-label="Foto">
+                                                    <% if (item.foto_pengumuman) { %>
+                                                        <img class="img-click-preview" data-src="<%= '/images/pengumuman/' + item.foto_pengumuman %>" src="<%= '/images/pengumuman/' + item.foto_pengumuman %>" alt="foto pengumuman" style="height:85px;width:auto;border-radius:6px;object-fit:cover;cursor:zoom-in;">
+                                                    <% } else { %>
+                                                        <span class="text-muted">-</span>
+                                                    <% } %>
+                                                </td>
+                                                <td data-label="Judul Pengumuman"><%= item.judul_pengumuman %></td>
+                                                <td data-label="Isi Pengumuman"><%= item.isi_pengumuman ? (item.isi_pengumuman.length > 50 ? item.isi_pengumuman.substring(0, 50) + '...' : item.isi_pengumuman) : '-' %></td>
+                                                <td class="text-right" data-label="Aksi">
+                                                    <div class="btn-actions">
+                                                        <a href="/manajer/pengumuman/edit/<%= item.id %>" class="btn btn-sm btn-outline-info" data-loading>Edit</a>
+                                                        <button type="button" class="btn btn-sm btn-outline-danger btn-delete" data-url="/manajer/pengumuman/hapus/<%= item.id %>">Hapus</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        <% } %>
+                                    <% } else { %>
+                                        <tr>
+                                            <td colspan="5" class="text-center">Belum ada data</td>
+                                        </tr>
+                                    <% } %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade modal-below-navbar" id="modalConfirmDelete" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Konfirmasi Hapus</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Apakah Anda yakin ingin menghapus data ini?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-danger" id="btnConfirmDelete">Hapus</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade modal-below-navbar modal-top" id="globalImagePreviewModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Pratinjau Gambar</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <img id="globalImagePreviewEl" src="" alt="preview" style="width:100%;height:auto;display:block;">
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('../../partials/scripts/__script-dashboard.ejs') %>
