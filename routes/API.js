@@ -4,6 +4,7 @@ const Pembina = require('../models/Pembina')
 const Pengawas = require('../models/Pengawas')
 const Pengumuman = require('../models/Pengumuman')
 const SahabatMedayu = require('../models/SahabatMedayu')
+const HalamanUtama = require('../models/HalamanUtama')
 
 const router = express.Router()
 
@@ -57,6 +58,17 @@ router.get('/pengumuman/:id', async(req, res) => {
         const pengumuman = await Pengumuman.getById(id)
 
         res.status(200).json({ pengumuman })
+    } catch (err) {
+        console.error(err)
+        res.status(500).json({message: 'Internal Server Error'})
+    }
+})
+
+router.get('/halaman-utama', async(req, res) => {
+    try {
+        const halaman_utama = await HalamanUtama.getAll()
+
+        res.status(200).json({ halaman_utama })
     } catch (err) {
         console.error(err)
         res.status(500).json({message: 'Internal Server Error'})

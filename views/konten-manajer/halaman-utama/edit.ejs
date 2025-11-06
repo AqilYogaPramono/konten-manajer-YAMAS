@@ -1,0 +1,61 @@
+<%- include('../../partials/headers/__header-dashboard.ejs', { title: 'Edit Halaman Utama' }) %>
+<%- include('../../partials/navs/__nav-manajer.ejs') %>
+<%- include('../../partials/messages/__messages-dashboard.ejs') %>
+
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="row">
+            <div class="col-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Edit Halaman Utama</h4>
+                        <form action="/manajer/halaman-utama/update/<%= halamanUtama.id %>" method="POST" enctype="multipart/form-data" data-loading>
+                            <div class="form-group">
+                                <label for="urutan">Urutan</label>
+                                <select class="form-control" id="urutan" name="urutan" required>
+                                    <option value="">Pilih Urutan</option>
+                                    <% if (Array.isArray(availableUrutan) && availableUrutan.length) { %>
+                                        <% availableUrutan.forEach(function(urut){ %>
+                                            <option value="<%= urut %>" <%= (halamanUtama.urutan == urut) ? 'selected' : '' %>><%= urut %></option>
+                                        <% }) %>
+                                    <% } %>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="foto">Ganti Foto</label>
+                                <input type="file" class="form-control" id="foto" name="foto" accept="image/*" data-preview="previewEdit">
+                                <div class="mt-2">
+                                    <img id="previewEdit" src="<%= halamanUtama.foto ? ('/images/halaman-utama/' + halamanUtama.foto) : '/images/no-image.png' %>" data-src="<%= halamanUtama.foto ? ('/images/halaman-utama/' + halamanUtama.foto) : '/images/no-image.png' %>" alt="foto halaman utama" style="height:300px;border-radius:8px;object-fit:cover;cursor:zoom-in;" class="img-click-preview">
+                                </div>
+                            </div>
+
+                            <div class="d-flex">
+                                <button type="submit" class="btn btn-primary mr-2">Simpan</button>
+                                <a href="/manajer/halaman-utama" class="btn btn-light" data-loading>Kembali</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade modal-below-navbar modal-top" id="globalImagePreviewModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Pratinjau Gambar</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <img id="globalImagePreviewEl" src="" alt="preview" style="width:100%;height:auto;display:block;">
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('../../partials/scripts/__script-dashboard.ejs') %>
