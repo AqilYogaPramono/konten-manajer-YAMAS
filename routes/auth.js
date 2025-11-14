@@ -34,16 +34,28 @@ router.post('/log', async (req, res) => {
 
         const manajer = await Manajer.login(data)
 
-        if (manajer.nama_jabatan != 'Manajer') {
-            req.flash('error', 'Akun Anda tidak memiliki akses untuk login')
-            req.flash('data', data)
-            return res.redirect('/')
-        }
+        const now = new Date()
+        const mulai = manajer.periode_mulai ? new Date(manajer.periode_mulai) : null
+        const berakhir = manajer.periode_berakhir ? new Date(manajer.periode_berakhir) : null
 
         if (!manajer) {
             req.flash('error', 'Nomor Pegawai yang anda masukkan salah')
             req.flash('data', data)
             return res.redirect('/')
+        }
+
+        if (manajer.nama_aplikasi != 'konten-manajemen' && manajer.hak_akses != 'manajer') {
+            req.flash('error', 'Akun Anda tidak memiliki akses untuk login ke aplikasi ini')
+            req.flash('data', data)
+            return res.redirect('/')
+        }
+
+        if (mulai !== null && berakhir !== null) {
+            if (!(now >= mulai && now <= berakhir)) {
+                req.flash('error', 'Akun Anda tidak aktif pada periode ini')
+                req.flash('data', data)
+                return res.redirect('/')
+            }
         }
 
         if (manajer.status_akun != 'Aktif') {
