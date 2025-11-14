@@ -63,6 +63,15 @@ class HalamanUtama {
             throw err
         }
     }
+
+    static async countPhoto() {
+        try {
+            const [rows] = await connection.query(`SELECT count(id) as count_photo_landingpage FROM halaman_utama`)
+            return rows
+        } catch (err) {
+            throw err
+        }
+    }
 }
 
 module.exports = HalamanUtama
