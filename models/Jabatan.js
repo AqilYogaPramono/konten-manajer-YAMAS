@@ -1,6 +1,6 @@
 const connection = require('../configs/database')
 
-class Pembina {
+class Jabatan {
     static async getAll() {
         try {
             const [rows] = await connection.query(`SELECT * FROM pembina`)
@@ -47,4 +47,4 @@ class Pembina {
     }
 }
 
-module.exports = Pembina
+module.exports = Jabatan

@@ -1,9 +1,6 @@
 const express = require('express')
 
-const Pembina = require('../models/Pembina')
-const Pengawas = require('../models/Pengawas')
 const Pengumuman = require('../models/Pengumuman')
-const SahabatMedayu = require('../models/SahabatMedayu')
 const HalamanUtama = require('../models/HalamanUtama')
 
 const router = express.Router()
@@ -30,7 +27,7 @@ router.get('/pengawas', async(req, res) => {
     }
 })
 
-router.get('/sahabat-medayu', async(req, res) => {
+router.get('/pengurus', async(req, res) => {
     try {
         const sahabat_medayu = await SahabatMedayu.getAll()
 
@@ -69,6 +66,52 @@ router.get('/halaman-utama', async(req, res) => {
         const halaman_utama = await HalamanUtama.getAll()
 
         res.status(200).json({ halaman_utama })
+    } catch (err) {
+        console.error(err)
+        res.status(500).json({message: 'Internal Server Error'})
+    }
+})
+
+router.get('/magang', async(req, res) => {
+    try {
+        const pengumuman = await Pengumuman.getPengumuman()
+
+        res.status(200).json({ pengumuman })
+    } catch (err) {
+        console.error(err)
+        res.status(500).json({message: 'Internal Server Error'})
+    }
+})
+
+router.get('/magang/:id', async(req, res) => {
+    try {
+        const {id} = req.params
+        const pengumuman = await Pengumuman.getById(id)
+
+        res.status(200).json({ pengumuman })
+    } catch (err) {
+        console.error(err)
+        res.status(500).json({message: 'Internal Server Error'})
+    }
+})
+
+router.get('/kunjungan', async(req, res) => {
+    try {
+        const pengumuman = await Pengumuman.getPengumuman()
+
+        res.status(200).json({ pengumuman })
+    } catch (err) {
+        console.error(err)
+        res.status(500).json({message: 'Internal Server Error'})
+    }
+})
+
+router.get('/kunjungan/:id', async(req, res) => {
+    try {
+        const {id} = req.params
+        const pengumuman = await Pengumuman.getById(id)
+
+        res.status(200).json({ pengumuman })
     } catch (err) {
         console.error(err)
         res.status(500).json({message: 'Internal Server Error'})

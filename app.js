@@ -18,10 +18,11 @@ const manajerDashboard = require('./routes/manajer/dashboard')
 const manajer = require('./routes/manajer/ubah-kata-sandi')
 
 const manajerHalamanUtama = require('./routes/konten-manajer/halaman-utama')
-const manajerPembina = require('./routes/konten-manajer/pembina')
-const manajerPengawas = require('./routes/konten-manajer/pengawas')
+const manajerJabatan = require('./routes/konten-manajer/personel/jabatan')
+const manajerAnggota = require('./routes/konten-manajer/personel/anggota')
 const manajerPengumuman = require('./routes/konten-manajer/pengumuman')
-const manajerSahabatMedayu = require('./routes/konten-manajer/sahabat-medayu')
+const manajerMagang = require('./routes/konten-manajer/magang')
+const manajerKunjungan = require('./routes/konten-manajer/kunjungan')
 
 const app = express()
 
@@ -57,10 +58,11 @@ app.use('/manajer/dashboard', manajerDashboard)
 app.use('/manajer/ubah-kata-sandi', manajer)
 
 app.use('/manajer/halaman-utama', manajerHalamanUtama)
-app.use('/manajer/pembina', manajerPembina)
-app.use('/manajer/pengawas', manajerPengawas)
+app.use('/manajer/jabatan', manajerJabatan)
+app.use('/manajer/anggota', manajerAnggota)
 app.use('/manajer/pengumuman', manajerPengumuman)
-app.use('/manajer/sahabat-medayu', manajerSahabatMedayu)
+app.use('/manajer/magang', manajerMagang)
+app.use('/manajer/kunjungan', manajerKunjungan)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
