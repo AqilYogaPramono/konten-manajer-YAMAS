@@ -54,6 +54,15 @@ class HalamanUtama {
             throw err
         }
     }
+
+    static async getCount() {
+        try {
+            const [rows] = await connection.query(`SELECT count(id) as count FROM halaman_utama`)
+            return rows[0].count
+        } catch (err) {
+            throw err
+        }
+    }
 }
 
 module.exports = HalamanUtama
