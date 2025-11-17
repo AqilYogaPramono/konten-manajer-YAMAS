@@ -12,7 +12,7 @@ class Pengumuman {
 
     static async getPengumuman() {
         try {
-            const [rows] = await connection.query(`SELECT id, judul_pengumuman, foto_pengumuman, dibuat_pada FROM pengumuman order by dibuat_pada desc`)
+            const [rows] = await connection.query(`SELECT id, judul, foto, dibuat_pada FROM pengumuman order by dibuat_pada desc`)
             return rows
         } catch (err) {
             throw err

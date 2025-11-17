@@ -30,14 +30,14 @@
                                             <tr>
                                                 <td data-label="No"><%= i + 1 %></td>
                                                 <td data-label="Foto">
-                                                    <% if (item.foto_pengumuman) { %>
-                                                        <img class="img-click-preview" data-src="<%= '/images/pengumuman/' + item.foto_pengumuman %>" src="<%= '/images/pengumuman/' + item.foto_pengumuman %>" alt="foto pengumuman" style="height:85px;width:auto;border-radius:6px;object-fit:cover;cursor:zoom-in;">
+                                                    <% if (item.foto) { %>
+                                                        <img class="img-click-preview" data-src="<%= '/images/pengumuman/' + item.foto %>" src="<%= '/images/pengumuman/' + item.foto %>" alt="foto pengumuman" style="height:85px;width:auto;border-radius:6px;object-fit:cover;cursor:zoom-in;">
                                                     <% } else { %>
                                                         <span class="text-muted">-</span>
                                                     <% } %>
                                                 </td>
-                                                <td data-label="Judul Pengumuman"><%= item.judul_pengumuman %></td>
-                                                <td data-label="Isi Pengumuman"><%= item.isi_pengumuman ? (item.isi_pengumuman.length > 50 ? item.isi_pengumuman.substring(0, 50) + '...' : item.isi_pengumuman) : '-' %></td>
+                                                <td data-label="Judul Pengumuman"><%= item.judul %></td>
+                                                <td data-label="Isi Pengumuman"><%= item.isi ? (item.isi.length > 50 ? item.isi.substring(0, 50) + '...' : item.isi) : '-' %></td>
                                                 <td class="text-right" data-label="Aksi">
                                                     <div class="btn-actions">
                                                         <a href="/manajer/pengumuman/edit/<%= item.id %>" class="btn btn-sm btn-outline-info" data-loading>Edit</a>

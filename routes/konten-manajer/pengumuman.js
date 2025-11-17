@@ -65,13 +65,13 @@ router.get('/buat', authManajer, async (req, res) => {
     }
 })
 
-router.post('/create', authManajer, upload.single('foto_pengumuman'), async (req, res) => {
+router.post('/create', authManajer, upload.single('foto'), async (req, res) => {
     try {
-        const { judul_pengumuman, isi_pengumuman } = req.body
-        const foto_pengumuman = req.file ? req.file.filename : null
-        const data = {judul_pengumuman, isi_pengumuman, foto_pengumuman}
+        const { judul, isi } = req.body
+        const foto = req.file ? req.file.filename : null
+        const data = {judul, isi, foto}
 
-        if (!judul_pengumuman) {
+        if (!judul) {
             deleteUploadedFile(req.file)
 
             req.flash("error", "Judul pengumuman tidak boleh kosong")
@@ -79,7 +79,7 @@ router.post('/create', authManajer, upload.single('foto_pengumuman'), async (req
             return res.redirect('/manajer/pengumuman/buat')
         }
 
-        if (!isi_pengumuman) {
+        if (!isi) {
             deleteUploadedFile(req.file)
 
             req.flash("error", "Isi pengumuman tidak boleh kosong")
@@ -98,7 +98,7 @@ router.post('/create', authManajer, upload.single('foto_pengumuman'), async (req
         if (req.file && req.file.path) {
             const result = await convertImageFile(req.file.path)
             if (result && result.outputPath) {
-                data.foto_pengumuman = path.basename(result.outputPath)
+                data.foto = path.basename(result.outputPath)
             }
         }
 
@@ -130,24 +130,24 @@ router.get('/edit/:id', authManajer, async (req, res) => {
     }
 })
 
-router.post('/update/:id', authManajer, upload.single('foto_pengumuman'), async (req, res) => {
+router.post('/update/:id', authManajer, upload.single('foto'), async (req, res) => {
     try {
         const {id} = req.params
 
         const pengumuman = await Pengumuman.getById(id)
 
-        const {judul_pengumuman, isi_pengumuman} = req.body
-        const foto_pengumuman = req.file ? req.file.filename : pengumuman.foto_pengumuman
-        const data = {judul_pengumuman, isi_pengumuman, foto_pengumuman}
+        const {judul, isi} = req.body
+        const foto = req.file ? req.file.filename : pengumuman.foto
+        const data = {judul, isi, foto}
 
-        if (!judul_pengumuman) {
+        if (!judul) {
             deleteUploadedFile(req.file)
 
             req.flash("error", "Judul pengumuman tidak boleh kosong")
             return res.redirect(`/manajer/pengumuman/edit/${id}`)
         }
 
-        if (!isi_pengumuman) {
+        if (!isi) {
             deleteUploadedFile(req.file)
 
             req.flash("error", "Isi pengumuman tidak boleh kosong")
@@ -166,11 +166,11 @@ router.post('/update/:id', authManajer, upload.single('foto_pengumuman'), async 
         if (req.file && req.file.path) {
             const result = await convertImageFile(req.file.path)
             if (result && result.outputPath) {
-                data.foto_pengumuman = path.basename(result.outputPath)
+                data.foto = path.basename(result.outputPath)
             }
         }
 
-        if (req.file && pengumuman.foto_pengumuman) deleteOldPhoto(pengumuman.foto_pengumuman)
+        if (req.file && pengumuman.foto) deleteOldPhoto(pengumuman.foto)
 
         await Pengumuman.update(data, id)
         req.flash('success', 'Data berhasil diperbarui')
@@ -187,8 +187,8 @@ router.post('/hapus/:id', authManajer, async (req, res) => {
         const {id} = req.params
 
         const data = await Pengumuman.getById(id)
-        if (data && data.foto_pengumuman) {
-            deleteOldPhoto(data.foto_pengumuman)
+        if (data && data.foto) {
+            deleteOldPhoto(data.foto)
         }
 
         await Pengumuman.delete(id)
