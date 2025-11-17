@@ -1,6 +1,6 @@
 const express = require('express')
 
-const Manajer = require('../../../models/Manajer')
+const Pegawai = require('../../../models/Pegawai')
 const Jabatan = require('../../../models/Jabatan')
 const { authManajer } = require('../../../middlewares/auth')
 
@@ -8,7 +8,7 @@ const router = express.Router()
 
 router.get('/', authManajer, async (req, res) => {
     try {
-        const manajer = await Manajer.getNama(req.session.manajerId)
+        const manajer = await Pegawai.getNama(req.session.manajerId)
         const jabatan = await Jabatan.getAll()
 
         res.render('konten-manajer/personel/jabatan/index', {manajer, jabatan})
@@ -21,7 +21,7 @@ router.get('/', authManajer, async (req, res) => {
 
 router.get('/buat', authManajer, async (req, res) => {
     try {
-        const manajer = await Manajer.getNama(req.session.manajerId)
+        const manajer = await Pegawai.getNama(req.session.manajerId)
 
         res.render('konten-manajer/personel/jabatan/buat', {
             manajer,
@@ -64,7 +64,7 @@ router.post('/create', authManajer, async (req, res) => {
 router.get('/edit/:id', authManajer, async (req, res) => {
     try {
         const {id} = req.params
-        const manajer = await Manajer.getNama(req.session.manajerId)
+        const manajer = await Pegawai.getNama(req.session.manajerId)
         const jabatan = await Jabatan.getById(id)
 
         res.render('konten-manajer/personel/jabatan/edit', {

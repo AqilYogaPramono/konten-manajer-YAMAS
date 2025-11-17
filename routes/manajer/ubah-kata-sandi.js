@@ -1,14 +1,14 @@
 const express = require('express')
 const bcrypt = require('bcryptjs')
 
-const Manajer = require('../../models/Manajer')
+const Pegawai = require('../../models/Pegawai')
 const { authManajer } = require('../../middlewares/auth')
 
 const router = express.Router()
 
 router.get('/', authManajer, async (req, res) => {
     try {
-        const manajer = await Manajer.getNama(req.session.manajerId)
+        const manajer = await Pegawai.getNama(req.session.manajerId)
         res.render('konten-manajer/manajer/ubah-kata-sandi', { 
             manajer,
             data: req.flash('data')[0]
@@ -42,7 +42,7 @@ router.post('/change-password', authManajer, async (req, res) => {
             return res.redirect('/manajer/ubah-kata-sandi')
         }
 
-        const manajer = await Manajer.getById(req.session.manajerId)
+        const manajer = await Pegawai.getById(req.session.manajerId)
         
         if (!(await bcrypt.compare(kata_sandi, manajer.kata_sandi))) {
             req.flash('error', 'Kata sandi lama yang anda inputkan salah')
@@ -80,7 +80,7 @@ router.post('/change-password', authManajer, async (req, res) => {
             return res.redirect('/manajer/ubah-kata-sandi')
         }
         
-        await Manajer.changePassword(req.session.manajerId, data)
+        await Pegawai.changePassword(req.session.manajerId, data)
         req.flash('success', 'Kata Sandi berhasil diubah')
         res.redirect('/manajer/dashboard')
     } catch (error) {

@@ -1,6 +1,6 @@
 const express = require('express')
 
-const Manajer = require('../../models/Manajer')
+const Pegawai = require('../../models/Pegawai')
 const HalamanUtama = require('../../models/HalamanUtama')
 const Kunjungan = require('../../models/Kunjungan')
 const Magang = require('../../models/Magang')
@@ -10,7 +10,7 @@ const router = express.Router()
 
 router.get('/', authManajer, async(req, res) => {
     try {
-        const manajer = await Manajer.getNama(req.session.manajerId)
+        const manajer = await Pegawai.getNama(req.session.manajerId)
         const countPhotoLandingpage = await HalamanUtama.countPhoto()
         const countKujungan = await Kunjungan.countKujungan()
         const countMagang = await Magang.countMagang()

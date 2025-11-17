@@ -1,6 +1,6 @@
 const express = require('express')
 
-const Manajer = require('../../../models/Manajer')
+const Pegawai = require('../../../models/Pegawai')
 const Anggota = require('../../../models/Anggota')
 const Jabatan = require('../../../models/Jabatan')
 const { authManajer } = require('../../../middlewares/auth')
@@ -39,7 +39,7 @@ const deleteOldPhoto = (oldPhoto) => {
 
 router.get('/', authManajer, async (req, res) => {
     try {
-        const manajer = await Manajer.getNama(req.session.manajerId)
+        const manajer = await Pegawai.getNama(req.session.manajerId)
         const anggota = await Anggota.getAll()
 
         res.render('konten-manajer/personel/anggota/index', {manajer, anggota})
@@ -52,7 +52,7 @@ router.get('/', authManajer, async (req, res) => {
 
 router.get('/buat', authManajer, async (req, res) => {
     try {
-        const manajer = await Manajer.getNama(req.session.manajerId)
+        const manajer = await Pegawai.getNama(req.session.manajerId)
         const jabatan = await Jabatan.getAll()
 
         res.render('konten-manajer/personel/anggota/buat', {
@@ -122,7 +122,7 @@ router.post('/create', authManajer, upload.single('foto'), async (req, res) => {
 router.get('/edit/:id', authManajer, async (req, res) => {
     try {
         const {id} = req.params
-        const manajer = await Manajer.getNama(req.session.manajerId)
+        const manajer = await Pegawai.getNama(req.session.manajerId)
         const anggota = await Anggota.getById(id)
         const jabatan = await Jabatan.getAll()
 

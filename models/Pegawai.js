@@ -1,7 +1,7 @@
 const connection = require('../configs/database-akun')
 const bcrypt = require('bcryptjs')
 
-class Manajer {
+class Pegawai {
     static async login(data) {
         try {
             const [rows] = await connection.query(`SELECT p.id, p.nama, p.nomor_pegawai, p.status_akun, p.kata_sandi, a.nama_aplikasi, a.hak_akses, pr.periode_mulai, pr.periode_berakhir FROM pegawai AS p LEFT JOIN pegawai_aplikasi AS pa ON p.id = pa.id_pegawai LEFT JOIN aplikasi AS a ON pa.id_aplikasi = a.id LEFT JOIN periode AS pr ON p.id = pr.id_pegawai WHERE p.nomor_pegawai = ?`, [data.nomor_pegawai])
@@ -39,4 +39,4 @@ class Manajer {
     }
 }
 
-module.exports = Manajer
+module.exports = Pegawai

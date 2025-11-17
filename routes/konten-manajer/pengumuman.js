@@ -1,7 +1,7 @@
 const express = require('express')
 
 const Pengumuman = require('../../models/Pengumuman')
-const Manajer = require('../../models/Manajer')
+const Pegawai = require('../../models/Pegawai')
 const { authManajer } = require('../../middlewares/auth')
 const { convertImageFile } = require('../../middlewares/convertImage')
 const path = require('path')
@@ -38,7 +38,7 @@ const deleteOldPhoto = (oldPhoto) => {
 
 router.get('/', authManajer, async (req, res) => {
     try {
-        const manajer = await Manajer.getNama(req.session.manajerId)
+        const manajer = await Pegawai.getNama(req.session.manajerId)
         const pengumuman = await Pengumuman.getAll()
 
         res.render('konten-manajer/pengumuman/index', { pengumuman, manajer })
@@ -51,7 +51,7 @@ router.get('/', authManajer, async (req, res) => {
 
 router.get('/buat', authManajer, async (req, res) => {
     try {
-        const manajer = await Manajer.getNama(req.session.manajerId)
+        const manajer = await Pegawai.getNama(req.session.manajerId)
 
         res.render('konten-manajer/pengumuman/buat', {
             manajer,
@@ -115,7 +115,7 @@ router.post('/create', authManajer, upload.single('foto_pengumuman'), async (req
 router.get('/edit/:id', authManajer, async (req, res) => {
     try {
         const {id} = req.params
-        const manajer = await Manajer.getNama(req.session.manajerId)
+        const manajer = await Pegawai.getNama(req.session.manajerId)
 
         const pengumuman = await Pengumuman.getById(id)
 

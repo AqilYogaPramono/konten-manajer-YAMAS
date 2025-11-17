@@ -1,7 +1,7 @@
 const express = require('express')
 const bcrypt = require('bcryptjs')
 
-const Manajer = require('../models/Manajer')
+const Pegawai = require('../models/Pegawai')
 
 const router = express.Router()
 
@@ -32,7 +32,7 @@ router.post('/log', async (req, res) => {
             return res.redirect('/')
         }
 
-        const manajer = await Manajer.login(data)
+        const manajer = await Pegawai.login(data)
 
         const now = new Date()
         const mulai = manajer.periode_mulai ? new Date(manajer.periode_mulai) : null
