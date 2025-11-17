@@ -234,15 +234,40 @@
         
         const self = this;
         
-        // Handle file input change
         this.input.addEventListener('change', function(e) {
-            const newFiles = Array.from(e.target.files);
+            const newFiles = Array.from(e.target.files || []);
+            if (newFiles.length === 0) return;
+            
+            const existingFileKeys = self.files.map(function(item) {
+                return item.file.name + item.file.size + item.file.lastModified;
+            });
+            
+            const filesToAdd = [];
             newFiles.forEach(function(file) {
-                if (file.type.startsWith('image/')) {
-                    self.addFile(file);
+                if (!file.type.startsWith('image/')) return;
+                
+                const fileKey = file.name + file.size + file.lastModified;
+                if (existingFileKeys.indexOf(fileKey) === -1) {
+                    filesToAdd.push(file);
                 }
             });
-            self.updateFileInput();
+            
+            if (filesToAdd.length === 0) {
+                self.updateFileInput();
+                return;
+            }
+            
+            let loadedCount = 0;
+            const totalFiles = filesToAdd.length;
+            
+            filesToAdd.forEach(function(file) {
+                self.addFile(file, function() {
+                    loadedCount++;
+                    if (loadedCount === totalFiles) {
+                        self.updateFileInput();
+                    }
+                });
+            });
         });
 
         // Handle remove button clicks and image preview
@@ -272,17 +297,29 @@
         });
     };
 
-    ImagePreviewManager.prototype.addFile = function(file) {
+    ImagePreviewManager.prototype.addFile = function(file, callback) {
         const self = this;
         const reader = new FileReader();
         
         reader.onload = function(e) {
-            const index = self.files.length;
-            self.files.push({
+            const fileObj = {
                 file: file,
                 dataUrl: e.target.result
-            });
+            };
+            self.files.push(fileObj);
+            const index = self.files.length - 1;
             self.renderPreview(index, file.name, e.target.result);
+            
+            if (callback && typeof callback === 'function') {
+                callback();
+            }
+        };
+        
+        reader.onerror = function() {
+            console.error('Error reading file:', file.name);
+            if (callback && typeof callback === 'function') {
+                callback();
+            }
         };
         
         reader.readAsDataURL(file);
@@ -322,12 +359,39 @@
     };
 
     ImagePreviewManager.prototype.updateFileInput = function() {
-        // Create new FileList from remaining files
-        const dt = new DataTransfer();
-        this.files.forEach(function(item) {
-            dt.items.add(item.file);
-        });
-        this.input.files = dt.files;
+        if (!this.input) return;
+        
+        try {
+            const dt = new DataTransfer();
+            const self = this;
+            let addedCount = 0;
+            
+            this.files.forEach(function(item) {
+                if (item && item.file) {
+                    try {
+                        dt.items.add(item.file);
+                        addedCount++;
+                    } catch (err) {
+                        console.error('Error adding file to DataTransfer:', err, item.file.name);
+                    }
+                }
+            });
+            
+            this.input.files = dt.files;
+            
+            if (this.input.files.length !== this.files.length) {
+                console.warn('File count mismatch. Expected:', this.files.length, 'Got:', this.input.files.length, 'Added:', addedCount);
+                
+                if (this.input.files.length < this.files.length) {
+                    console.warn('Some files were not added. Trying to re-add...');
+                    setTimeout(function() {
+                        self.updateFileInput();
+                    }, 100);
+                }
+            }
+        } catch (err) {
+            console.error('Error updating file input:', err);
+        }
     };
 
     // Initialize image preview managers
