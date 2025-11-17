@@ -38,7 +38,7 @@ const deleteOldPhoto = (oldPhoto) => {
 
 router.get('/', authManajer, async (req, res) => {
     try {
-        const manajer = await Pegawai.getNama(req.session.manajerId)
+        const manajer = await Pegawai.getNama(req.session.pegawaiId)
         const halamanUtama = await HalamanUtama.getAll()
         const count = await HalamanUtama.getCount()
 
@@ -58,7 +58,7 @@ router.get('/buat', authManajer, async (req, res) => {
             return res.redirect('/manajer/halaman-utama')
         }
 
-        const manajer = await Pegawai.getNama(req.session.manajerId)
+        const manajer = await Pegawai.getNama(req.session.pegawaiId)
         const usedUrutan = await HalamanUtama.getUsedUrutan()
         const availableUrutan = []
         for (let i = 1; i <= 8; i++) {
@@ -146,7 +146,7 @@ router.post('/create', authManajer, upload.single('foto'), async (req, res) => {
 router.get('/edit/:id', authManajer, async (req, res) => {
     try {
         const {id} = req.params
-        const manajer = await Pegawai.getNama(req.session.manajerId)
+        const manajer = await Pegawai.getNama(req.session.pegawaiId)
 
         const halamanUtama = await HalamanUtama.getById(id)
         const usedUrutan = await HalamanUtama.getUsedUrutan()

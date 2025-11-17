@@ -10,7 +10,7 @@ const router = express.Router()
 
 router.get('/', authManajer, async(req, res) => {
     try {
-        const manajer = await Pegawai.getNama(req.session.manajerId)
+        const manajer = await Pegawai.getNama(req.session.pegawaiId)
         const countPhotoLandingpage = await HalamanUtama.countPhoto()
         const countKujungan = await Kunjungan.countKujungan()
         const countMagang = await Magang.countMagang()

@@ -1,6 +1,6 @@
 const authManajer = async (req, res, next) => {
     try {
-        if(req.session.manajerId) {
+        if(req.session.pegawaiId) {
             return next()
         } else {
             req.flash('error', 'Anda tidak memiliki akses kehalaman tersebut')

@@ -32,23 +32,27 @@ router.post('/log', async (req, res) => {
             return res.redirect('/')
         }
 
-        const manajer = await Pegawai.login(data)
+        const pegawai = await Pegawai.login(data)
 
-        const now = new Date()
-        const mulai = manajer.periode_mulai ? new Date(manajer.periode_mulai) : null
-        const berakhir = manajer.periode_berakhir ? new Date(manajer.periode_berakhir) : null
-
-        if (!manajer) {
+        if (!pegawai) {
             req.flash('error', 'Nomor Pegawai yang anda masukkan salah')
             req.flash('data', data)
             return res.redirect('/')
         }
 
-        if (manajer.nama_aplikasi != 'konten-manajemen' && manajer.hak_akses != 'manajer') {
+        const aplikasiKontenManajemen = pegawai.aplikasi.find(
+            app => app.nama_aplikasi == 'konten-manajemen'
+        )
+
+        if (!aplikasiKontenManajemen && aplikasiKontenManajemen.hak_akses == 'manajer') {
             req.flash('error', 'Akun Anda tidak memiliki akses untuk login ke aplikasi ini')
             req.flash('data', data)
             return res.redirect('/')
         }
+
+        const now = new Date()
+        const mulai = pegawai.periode_mulai ? new Date(pegawai.periode_mulai) : null
+        const berakhir = pegawai.periode_berakhir ? new Date(pegawai.periode_berakhir) : null
 
         if (mulai !== null && berakhir !== null) {
             if (!(now >= mulai && now <= berakhir)) {
@@ -58,19 +62,19 @@ router.post('/log', async (req, res) => {
             }
         }
 
-        if (manajer.status_akun != 'Aktif') {
+        if (pegawai.status_akun != 'Aktif') {
             req.flash('error', 'Akun anda belum aktif, silahkan hubungi Admin')
             req.flash('data', data)
             return res.redirect('/')
         }
 
-        if (!await bcrypt.compare(kata_sandi, manajer.kata_sandi)) {
+        if (!await bcrypt.compare(kata_sandi, pegawai.kata_sandi)) {
             req.flash('error', 'Kata sandi yang anda masukkan salah')
             req.flash('data', data)
             return res.redirect('/')
         }
 
-        req.session.manajerId = manajer.id
+        req.session.pegawaiId = pegawai.id
 
         req.flash('success', 'Anda berhasil masuk')
         res.redirect('/manajer/dashboard')
@@ -88,7 +92,7 @@ router.get('/logout', async(req, res) => {
     } catch (err) {
         console.error(err)
         req.flash('error', 'Internal server error')
-        if (req.session.manajerId) return res.redirect('/admin/dashboard')
+        if (req.session.pegawaiId) return res.redirect('/admin/dashboard')
     }
 })
 
